@@ -13,11 +13,39 @@
 
 ---
 
-## Install dependencies
+## Install on Kali Linux
+
+### Step 1 — Get the tool
 
 ```bash
-sudo apt install -y nmap sqlmap ffuf nikto gobuster nuclei \
+git clone https://github.com/GlobalReconReport/red-recce.git
+cd red-recce
+```
+
+### Step 2 — Install all dependencies (apt only, no Go/compilation)
+
+```bash
+sudo apt update && sudo apt install -y \
+  nmap sqlmap ffuf nikto gobuster nuclei \
   subfinder httpx-toolkit whatweb wafw00f dnsrecon curl seclists
+```
+
+> **Live USB note:** All tools install from the default Kali repos.
+> No internet-at-runtime required after install. No Go, no pip, no compilation.
+
+### Step 3 — Verify tools are found
+
+```bash
+python3 redrecce.py --check-tools
+```
+
+Green = installed. Red = missing (re-run the apt line above).
+
+### Step 4 — Run it
+
+```bash
+python3 redrecce.py -t localhost:3000        # OWASP Juice Shop
+python3 redrecce.py -t target.com            # full scan
 ```
 
 ---

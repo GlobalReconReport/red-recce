@@ -103,7 +103,7 @@ TOOL_APT = {
     "ffuf":          "sudo apt install -y ffuf",
     "nikto":         "sudo apt install -y nikto",
     "gobuster":      "sudo apt install -y gobuster",
-    "nuclei":        "sudo apt install -y nuclei",
+    "nuclei":        "sudo apt install -y nuclei --fix-missing",
     "subfinder":     "sudo apt install -y subfinder",
     "httpx-toolkit": "sudo apt install -y httpx-toolkit",
     "whatweb":       "sudo apt install -y whatweb",
@@ -560,7 +560,7 @@ class HuntKit:
             # Always probe the explicit port when specified
             port_flag = f"-ports {self.port}" if self.port else ""
             cmd = (
-                f"{hx} -l {shlex.quote(targets_file)} "
+                f"cat {shlex.quote(targets_file)} | {hx} "
                 f"-status-code -title -tech-detect -follow-redirects "
                 f"-threads {self.threads} "
                 f"-json -o {shlex.quote(jsonl_out)} "
@@ -752,7 +752,6 @@ class HuntKit:
                     f"-t {self.threads} "
                     f"-q "
                     f"--no-error "
-                    f"-s 200,201,204,301,302,307,401,403 "
                     f"{proxy_flag}"
                 )
                 rc = self.rl(cmd, f"gobuster_{i}.log", timeout=300)
@@ -892,7 +891,7 @@ class HuntKit:
                     print(f"  {YELLOW}▸{R} {ln[:120]}")
                 print()
         else:
-            warn("nuclei not found  →  sudo apt install -y nuclei")
+            warn("nuclei not found  →  sudo apt install -y nuclei --fix-missing")
 
         # nikto — comprehensive web scan
         if check_tool("nikto"):
@@ -923,7 +922,7 @@ class HuntKit:
     def phase_xss(self) -> None:
         section("🪃", "Phase 6 — XSS Scanning", RED)
         if not check_tool("nuclei"):
-            err("nuclei not found  →  sudo apt install -y nuclei")
+            err("nuclei not found  →  sudo apt install -y nuclei --fix-missing")
             return
 
         urls_file = self.f("probe", "urls.txt")
